@@ -20,9 +20,11 @@ SangriaUI={
 			$(`select${_this.targetSelector}`).each(function(){
 				let el_select = $(this);
 				let targetName = el_select.attr('name');
-				let targetId = el_select.attr('id');
-				let targetClass = el_select.attr('class');
-				targetClass = targetClass.replace('sangria-select', '');
+				targetName = (typeof targetName == 'undefined' ? '' : targetName);
+				let targetId = el_select.attr('data-ss-id');
+				targetId = (typeof targetId == 'undefined' ? '' : targetId);
+				let targetClass = el_select.attr('data-ss-class');
+				targetClass = (typeof targetClass == 'undefined' ? '' : targetClass);
 
 				// 감싼 영역 추가
 				let selectWrap = `<div id="${targetId}" class="ss_wrap ss_${targetName} ${targetClass}"></div>`;
@@ -85,8 +87,8 @@ SangriaUI={
 				el_ss_option_list.off('click');
 				el_ss_option_list.on('click', function(e){
 					let in_this = $(this);
-					let selected_name = in_this.data('ss-name');
-					let selected_value = in_this.data('ss-value');
+					let selected_name = in_this.attr('data-ss-name');
+					let selected_value = in_this.attr('data-ss-value');
 					_this.setSelectProp(selected_name, selected_value);
 
 					_this.setSelectText(selected_name);

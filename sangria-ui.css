@@ -12,11 +12,11 @@ select.sangria-select{
 }
 
 /* 기본 테마 */
-.ss_wrap{
+.ss-theme-1.ss_wrap{
 	position: relative;
 	width: 100px;
 }
-.ss_selected_value{
+.ss-theme-1 .ss_selected_value{
 	box-sizing: border-box;
 	display: block;
 	padding: 5px 10px;
@@ -24,7 +24,7 @@ select.sangria-select{
 	border: 1px solid #eee;
 	z-index: 500;
 }
-.ss_option_list{
+.ss-theme-1 .ss_option_list{
 	position: absolute;
 	width: 100%;
 	margin: 0;
@@ -33,13 +33,13 @@ select.sangria-select{
 	background: #fff;
 	z-index: 1000;
 }
-.ss_option_list li{
+.ss-theme-1 .ss_option_list li{
 	list-style: none;
 	margin: 0;
 	padding: 0;
 	cursor: pointer;
 	padding: 5px 10px;
 }
-.ss_option_list li:hover{
+.ss-theme-1 .ss_option_list li:hover{
 	background: #e3e3e3;
 }

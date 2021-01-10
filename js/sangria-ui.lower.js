@@ -1,6 +1,6 @@
 "use strict";
 
-SangriaUI = {
+var SangriaUI = {
   UI_SELECT: {
     targetSelector: '.sangria-select',
     construct: function construct() {

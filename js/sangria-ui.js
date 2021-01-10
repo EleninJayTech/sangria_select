@@ -1,4 +1,4 @@
-SangriaUI={
+let SangriaUI={
 	UI_SELECT:{
 		targetSelector:'.sangria-select',
 		construct:function(){

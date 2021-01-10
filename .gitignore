@@ -1,2 +1,5 @@
 /debug.log
 /.idea
+/node_modules
+/.babelrc
+/package-lock.json

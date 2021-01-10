@@ -1,39 +1,69 @@
+$fontColor:#2d2d2d;
+$borderColor: #555555;
+
 select.sangria-select{
 	display: none;
 }
 
 .ss_wrap{
 	position: relative;
-	width: 100px;
+	width: 120px;
+
+	&.open{
+		.ss_selected_value{
+			border-radius: 3px 3px 0 0;
+			border-bottom: none;
+		}
+	}
+
+	&.close{
+		ul.ss_option_list{
+			display: none;
+		}
+	}
 }
 
 .ss_selected_value{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 32px;
+	color: $fontColor;
+	font-size: 12px;
 	text-decoration: none;
 	box-sizing: border-box;
 	display: block;
-	padding: 5px 10px;
+	padding: 7px 15px 7px 10px;
 	width: 100%;
-	border: 1px solid #eee;
+	border: 1px solid $borderColor;
 	z-index: 500;
+	border-radius: 3px;
 }
 
 ul.ss_option_list{
+	border-radius: 0 0 3px 3px;
+	box-sizing: border-box;
 	position: absolute;
 	width: 100%;
 	margin: 0;
 	padding: 0;
-	border: 1px solid #ddd;
+	border-top: none;
+	border-left: 1px solid $borderColor;
+	border-right: 1px solid $borderColor;
+	border-bottom: 1px solid $borderColor;
 	background: #fff;
 	z-index: 1000;
 
-	&.close{
-		display: none;
-	}
-
 	li{
+		box-sizing: border-box;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		height: 26px;
+		font-size: 12px;
+		color: $fontColor;
 		list-style: none;
 		margin: 0;
-		padding: 0;
 		cursor: pointer;
 		padding: 5px 10px;
 

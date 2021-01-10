@@ -27,17 +27,17 @@ let SangriaUI={
 				targetClass = (typeof targetClass == 'undefined' ? '' : targetClass);
 
 				// 감싼 영역 추가
-				let selectWrap = `<div id="${targetId}" class="ss_wrap ss_${targetName} ${targetClass}"></div>`;
+				let selectWrap = `<div id="${targetId}" class="ss_wrap ss_${targetName} ${targetClass} close"></div>`;
 				el_select.wrap(selectWrap);
 
 				let selectHtml = '';
-				selectHtml += `<a href="#" class="ss_selected_value"></a>`;
-				selectHtml += `<ul class="ss_option_list close">`;
+				selectHtml += `<a href="#" class="ss_selected_value" title="" data-ss-name="${targetName}"></a>`;
+				selectHtml += `<ul class="ss_option_list" data-ss-name="${targetName}">`;
 					el_select.find('option').each(function(){
 						let el_in_this = $(this);
 						let in_this_value = el_in_this.val();
 						let in_this_text = el_in_this.text();
-						selectHtml += `<li data-ss-name="${targetName}" data-ss-value="${in_this_value}">${in_this_text}</li>`;
+						selectHtml += `<li data-ss-name="${targetName}" data-ss-value="${in_this_value}" title="${in_this_text}">${in_this_text}</li>`;
 					});
 				selectHtml += `</ul>`;
 
@@ -53,7 +53,7 @@ let SangriaUI={
 		setSelectText:function(targetName){
 			let el_selectedTarget = $(`select[name='${targetName}'] option:selected`);
 			let targetText = el_selectedTarget.text();
-			$(`.ss_wrap.ss_${targetName} a.ss_selected_value`).text(targetText);
+			$(`.ss_wrap.ss_${targetName} a.ss_selected_value`).text(targetText).attr('title', targetText);
 		},
 
 		/**
@@ -65,13 +65,13 @@ let SangriaUI={
 			let el_selectedTarget = $(`select[name='${targetName}']`);
 			el_selectedTarget.val(targetValue).prop({selected:true}).attr({selected:true});
 			el_selectedTarget.trigger('change');
-			$(`.ss_wrap.ss_${targetName} .ss_option_list`).removeClass('open').addClass('close');
+			$(`.ss_wrap.ss_${targetName}`).removeClass('open').addClass('close');
 		},
 		setSelectProp_old:function(targetName, targetValue){
 			let el_selectedTarget = $(`select[name='${targetName}']`);
 			el_selectedTarget.find(`option[value='${targetValue}']`).attr('selected', 'selected');
 			el_selectedTarget.trigger('change');
-			$(`.ss_wrap.ss_${targetName} .ss_option_list`).removeClass('open').addClass('close');
+			$(`.ss_wrap.ss_${targetName}`).removeClass('open').addClass('close');
 		},
 
 		/**
@@ -98,7 +98,9 @@ let SangriaUI={
 
 				el_ss_selected_value.off('click');
 				el_ss_selected_value.on('click', function(e){
-					$(this).next('.ss_option_list').toggleClass('close').toggleClass('open');
+					let in_this = $(this);
+					let selected_name = in_this.attr('data-ss-name');
+					$(`.ss_wrap.ss_${selected_name}`).toggleClass('close').toggleClass('open');
 					e.preventDefault();
 					return false;
 				});
@@ -118,7 +120,9 @@ let SangriaUI={
 
 				el_ss_selected_value.unbind('click');
 				el_ss_selected_value.bind('click', function(e){
-					$(this).next('.ss_option_list').toggleClass('close').toggleClass('open');
+					let in_this = $(this);
+					let selected_name = in_this.attr('data-ss-name');
+					$(`.ss_wrap.ss_${selected_name}`).toggleClass('close').toggleClass('open');
 					e.preventDefault();
 					return false;
 				});

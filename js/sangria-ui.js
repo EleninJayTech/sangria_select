@@ -1,4 +1,44 @@
 let SangriaUI={
+	/**
+	 * jQuery 버전 검증
+	 * @param {int} firstVersion
+	 * @param {int} [mainVersion]
+	 * @param {int} [subVersion]
+	 * @returns {boolean}
+	 */
+	jQueryVersionConfirm:function(firstVersion, mainVersion, subVersion){
+		let jQueryVersionArray = $.fn.jquery.split('.');
+		let confirmVersion = true;
+
+		if( parseInt(jQueryVersionArray[0]) < firstVersion ){
+			confirmVersion = false;
+		}
+
+		if( jQueryVersionArray.length > 1 && typeof mainVersion == 'number' ){
+			if( parseInt(jQueryVersionArray[1]) < mainVersion ){
+				confirmVersion = false;
+			}
+		}
+
+		if( jQueryVersionArray.length > 2 && typeof subVersion == 'number' ){
+			if( parseInt(jQueryVersionArray[2]) < subVersion ){
+				confirmVersion = false;
+			}
+		}
+
+		return confirmVersion;
+	},
+
+	/**
+	 * jQuery 이벤트 체크
+	 */
+	jQueryEventCheck:function(){
+		if( typeof $.fn.on != 'function' ){
+			$.fn.on = $.fn.bind;
+			$.fn.off = $.fn.unbind;
+		}
+	},
+
 	UI_SELECT:{
 		targetSelector:'.sangria-select',
 		construct:function(){
@@ -63,13 +103,13 @@ let SangriaUI={
 		 */
 		setSelectProp:function(targetName, targetValue){
 			let el_selectedTarget = $(`select[name='${targetName}']`);
-			el_selectedTarget.val(targetValue).prop({selected:true}).attr({selected:true});
-			el_selectedTarget.trigger('change');
-			$(`.ss_wrap.ss_${targetName}`).removeClass('open').addClass('close');
-		},
-		setSelectProp_old:function(targetName, targetValue){
-			let el_selectedTarget = $(`select[name='${targetName}']`);
-			el_selectedTarget.find(`option[value='${targetValue}']`).attr('selected', 'selected');
+
+			if( SangriaUI.jQueryVersionConfirm(1,6) ){
+				el_selectedTarget.val(targetValue).prop({selected:true}).attr({selected:true});
+			} else {
+				el_selectedTarget.find(`option[value='${targetValue}']`).attr('selected', 'selected');
+			}
+
 			el_selectedTarget.trigger('change');
 			$(`.ss_wrap.ss_${targetName}`).removeClass('open').addClass('close');
 		},
@@ -82,57 +122,35 @@ let SangriaUI={
 			let el_ss_selected_value = $("a.ss_selected_value");
 			let el_ss_option_list = $('.ss_wrap .ss_option_list > li');
 
-			if( typeof jQuery().on == 'function' ){
-				// 옵션 선택
-				el_ss_option_list.off('click');
-				el_ss_option_list.on('click', function(e){
-					let in_this = $(this);
-					let selected_name = in_this.attr('data-ss-name');
-					let selected_value = in_this.attr('data-ss-value');
-					_this.setSelectProp(selected_name, selected_value);
+			// 옵션 선택
+			el_ss_option_list.off('click');
+			el_ss_option_list.on('click', function(e){
+				let in_this = $(this);
+				let selected_name = in_this.attr('data-ss-name');
+				let selected_value = in_this.attr('data-ss-value');
+				_this.setSelectProp(selected_name, selected_value);
 
-					_this.setSelectText(selected_name);
-					e.preventDefault();
-					return false;
-				});
+				_this.setSelectText(selected_name);
+				e.preventDefault();
+				return false;
+			});
 
-				el_ss_selected_value.off('click');
-				el_ss_selected_value.on('click', function(e){
-					let in_this = $(this);
-					let selected_name = in_this.attr('data-ss-name');
-					$(`.ss_wrap.ss_${selected_name}`).toggleClass('close').toggleClass('open');
-					e.preventDefault();
-					return false;
-				});
-			} else {
-				// 옵션 선택
-				el_ss_option_list.unbind('click');
-				el_ss_option_list.bind('click', function(e){
-					let in_this = $(this);
-					let selected_name = in_this.attr('data-ss-name');
-					let selected_value = in_this.attr('data-ss-value');
-					_this.setSelectProp_old(selected_name, selected_value);
+			el_ss_selected_value.off('click');
+			el_ss_selected_value.on('click', function(e){
+				let in_this = $(this);
+				let selected_name = in_this.attr('data-ss-name');
+				$(`.ss_wrap.ss_${selected_name}`).toggleClass('close').toggleClass('open');
 
-					_this.setSelectText(selected_name);
-					e.preventDefault();
-					return false;
-				});
-
-				el_ss_selected_value.unbind('click');
-				el_ss_selected_value.bind('click', function(e){
-					let in_this = $(this);
-					let selected_name = in_this.attr('data-ss-name');
-					$(`.ss_wrap.ss_${selected_name}`).toggleClass('close').toggleClass('open');
-					e.preventDefault();
-					return false;
-				});
-			}
+				e.preventDefault();
+				return false;
+			});
 		}
 	}
 };
 
 if( typeof jQuery == 'function' ){
 	jQuery(function($){
+		SangriaUI.jQueryEventCheck();
 		SangriaUI.UI_SELECT.construct();
 	});
 };

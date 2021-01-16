@@ -1,6 +1,45 @@
 "use strict";
 
 var SangriaUI = {
+  /**
+   * jQuery 버전 검증
+   * @param {int} firstVersion
+   * @param {int} [mainVersion]
+   * @param {int} [subVersion]
+   * @returns {boolean}
+   */
+  jQueryVersionConfirm: function jQueryVersionConfirm(firstVersion, mainVersion, subVersion) {
+    var jQueryVersionArray = $.fn.jquery.split('.');
+    var confirmVersion = true;
+
+    if (parseInt(jQueryVersionArray[0]) < firstVersion) {
+      confirmVersion = false;
+    }
+
+    if (jQueryVersionArray.length > 1 && typeof mainVersion == 'number') {
+      if (parseInt(jQueryVersionArray[1]) < mainVersion) {
+        confirmVersion = false;
+      }
+    }
+
+    if (jQueryVersionArray.length > 2 && typeof subVersion == 'number') {
+      if (parseInt(jQueryVersionArray[2]) < subVersion) {
+        confirmVersion = false;
+      }
+    }
+
+    return confirmVersion;
+  },
+
+  /**
+   * jQuery 이벤트 체크
+   */
+  jQueryEventCheck: function jQueryEventCheck() {
+    if (typeof $.fn.on != 'function') {
+      $.fn.on = $.fn.bind;
+      $.fn.off = $.fn.unbind;
+    }
+  },
   UI_SELECT: {
     targetSelector: '.sangria-select',
     construct: function construct() {
@@ -65,17 +104,17 @@ var SangriaUI = {
      */
     setSelectProp: function setSelectProp(targetName, targetValue) {
       var el_selectedTarget = $("select[name='".concat(targetName, "']"));
-      el_selectedTarget.val(targetValue).prop({
-        selected: true
-      }).attr({
-        selected: true
-      });
-      el_selectedTarget.trigger('change');
-      $(".ss_wrap.ss_".concat(targetName)).removeClass('open').addClass('close');
-    },
-    setSelectProp_old: function setSelectProp_old(targetName, targetValue) {
-      var el_selectedTarget = $("select[name='".concat(targetName, "']"));
-      el_selectedTarget.find("option[value='".concat(targetValue, "']")).attr('selected', 'selected');
+
+      if (SangriaUI.jQueryVersionConfirm(1, 6)) {
+        el_selectedTarget.val(targetValue).prop({
+          selected: true
+        }).attr({
+          selected: true
+        });
+      } else {
+        el_selectedTarget.find("option[value='".concat(targetValue, "']")).attr('selected', 'selected');
+      }
+
       el_selectedTarget.trigger('change');
       $(".ss_wrap.ss_".concat(targetName)).removeClass('open').addClass('close');
     },
@@ -87,61 +126,36 @@ var SangriaUI = {
       var _this = this;
 
       var el_ss_selected_value = $("a.ss_selected_value");
-      var el_ss_option_list = $('.ss_wrap .ss_option_list > li');
+      var el_ss_option_list = $('.ss_wrap .ss_option_list > li'); // 옵션 선택
 
-      if (typeof jQuery().on == 'function') {
-        // 옵션 선택
-        el_ss_option_list.off('click');
-        el_ss_option_list.on('click', function (e) {
-          var in_this = $(this);
-          var selected_name = in_this.attr('data-ss-name');
-          var selected_value = in_this.attr('data-ss-value');
+      el_ss_option_list.off('click');
+      el_ss_option_list.on('click', function (e) {
+        var in_this = $(this);
+        var selected_name = in_this.attr('data-ss-name');
+        var selected_value = in_this.attr('data-ss-value');
 
-          _this.setSelectProp(selected_name, selected_value);
+        _this.setSelectProp(selected_name, selected_value);
 
-          _this.setSelectText(selected_name);
+        _this.setSelectText(selected_name);
 
-          e.preventDefault();
-          return false;
-        });
-        el_ss_selected_value.off('click');
-        el_ss_selected_value.on('click', function (e) {
-          var in_this = $(this);
-          var selected_name = in_this.attr('data-ss-name');
-          $(".ss_wrap.ss_".concat(selected_name)).toggleClass('close').toggleClass('open');
-          e.preventDefault();
-          return false;
-        });
-      } else {
-        // 옵션 선택
-        el_ss_option_list.unbind('click');
-        el_ss_option_list.bind('click', function (e) {
-          var in_this = $(this);
-          var selected_name = in_this.attr('data-ss-name');
-          var selected_value = in_this.attr('data-ss-value');
-
-          _this.setSelectProp_old(selected_name, selected_value);
-
-          _this.setSelectText(selected_name);
-
-          e.preventDefault();
-          return false;
-        });
-        el_ss_selected_value.unbind('click');
-        el_ss_selected_value.bind('click', function (e) {
-          var in_this = $(this);
-          var selected_name = in_this.attr('data-ss-name');
-          $(".ss_wrap.ss_".concat(selected_name)).toggleClass('close').toggleClass('open');
-          e.preventDefault();
-          return false;
-        });
-      }
+        e.preventDefault();
+        return false;
+      });
+      el_ss_selected_value.off('click');
+      el_ss_selected_value.on('click', function (e) {
+        var in_this = $(this);
+        var selected_name = in_this.attr('data-ss-name');
+        $(".ss_wrap.ss_".concat(selected_name)).toggleClass('close').toggleClass('open');
+        e.preventDefault();
+        return false;
+      });
     }
   }
 };
 
 if (typeof jQuery == 'function') {
   jQuery(function ($) {
+    SangriaUI.jQueryEventCheck();
     SangriaUI.UI_SELECT.construct();
   });
 }

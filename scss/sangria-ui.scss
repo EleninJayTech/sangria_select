@@ -15,7 +15,7 @@ select.sangria-select{
 			border-bottom: none;
 
 			&:after{
-				background-position: -18px 0;
+				background-position: 0 0;
 			}
 		}
 	}
@@ -54,7 +54,7 @@ select.sangria-select{
 		right: 5px;
 		top: 50%;
 		margin-top: -7px;
-		background-position: 0;
+		background-position: -18px 0;
 	}
 }
 

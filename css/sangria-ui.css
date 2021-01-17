@@ -1,3 +1,4 @@
+@charset "UTF-8";
 select.sangria-select {
   display: none;
 }
@@ -9,6 +10,9 @@ select.sangria-select {
 .ss_wrap.open .ss_selected_value {
   border-radius: 3px 3px 0 0;
   border-bottom: none;
+}
+.ss_wrap.open .ss_selected_value:after {
+  background-position: -18px 0;
 }
 .ss_wrap.close ul.ss_option_list {
   display: none;
@@ -29,6 +33,19 @@ select.sangria-select {
   border: 1px solid #555555;
   z-index: 500;
   border-radius: 3px;
+}
+.ss_selected_value:after {
+  content: "　";
+  width: 10px;
+  height: 14px;
+  background-image: url("../image/arrow.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  margin-top: -7px;
+  background-position: 0;
 }
 
 ul.ss_option_list {

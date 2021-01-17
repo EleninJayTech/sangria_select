@@ -41,6 +41,14 @@ let SangriaUI={
 
 	UI_SELECT:{
 		targetSelector:'.sangria-select',
+		targetNameList:[],
+
+		closeMode:'default', // default, leave, item_leave, focus_out
+		closeDefault:[],
+		closeLeave:[],
+		closeItemLeave:[],
+		closeFocusOut:[],
+
 		construct:function(){
 			let _this = this;
 			if( $(_this.targetSelector).length == 0 ){
@@ -61,10 +69,15 @@ let SangriaUI={
 				let el_select = $(this);
 				let targetName = el_select.attr('name');
 				targetName = (typeof targetName == 'undefined' ? '' : targetName);
+				_this.targetNameList.push(targetName);
+
 				let targetId = el_select.attr('data-ss-id');
 				targetId = (typeof targetId == 'undefined' ? '' : targetId);
 				let targetClass = el_select.attr('data-ss-class');
 				targetClass = (typeof targetClass == 'undefined' ? '' : targetClass);
+				let closeMode = el_select.attr('data-ss-close-mode');
+
+				_this.addCloseModeNameList(targetName, closeMode);
 
 				// 감싼 영역 추가
 				let selectWrap = `<div id="${targetId}" class="ss_wrap ss_${targetName} ${targetClass} close"></div>`;
@@ -84,6 +97,32 @@ let SangriaUI={
 				el_select.parent('.ss_wrap').append(selectHtml);
 				_this.setSelectText(targetName);
 			});
+		},
+
+		/**
+		 * 닫기 모드 설정 목록 추가
+		 * add name for close mode
+		 */
+		addCloseModeNameList:function(targetName, closeMode){
+			if( !targetName || !closeMode ){
+				return true;
+			}
+			let _this = this;
+
+			switch(closeMode){
+				case 'default':
+					_this.closeDefault.push(targetName);
+					break;
+				case 'leave':
+					_this.closeLeave.push(targetName);
+					break;
+				case 'item_leave':
+					_this.closeItemLeave.push(targetName);
+					break;
+				case 'focus_out':
+					_this.closeFocusOut.push(targetName);
+					break;
+			}
 		},
 
 		/**
@@ -115,6 +154,22 @@ let SangriaUI={
 		},
 
 		/**
+		 * 목록 열기
+		 * @param targetName
+		 */
+		itemListOpen:function(targetName){
+			$(`.ss_wrap.ss_${targetName}`).removeClass('close').addClass('open');
+		},
+
+		/**
+		 * 목록 닫기
+		 * @param targetName
+		 */
+		itemListClose:function(targetName){
+			$(`.ss_wrap.ss_${targetName}`).removeClass('open').addClass('close');
+		},
+
+		/**
 		 * 필요 이벤트 실행
 		 */
 		setEvent:function(){
@@ -122,7 +177,9 @@ let SangriaUI={
 			let el_ss_selected_value = $("a.ss_selected_value");
 			let el_ss_option_list = $('.ss_wrap .ss_option_list > li');
 
-			// 옵션 선택
+			/**
+			 * option 클릭 이벤트
+			 */
 			el_ss_option_list.off('click');
 			el_ss_option_list.on('click', function(e){
 				let in_this = $(this);
@@ -135,6 +192,9 @@ let SangriaUI={
 				return false;
 			});
 
+			/**
+			 * select 클릭 이벤트
+			 */
 			el_ss_selected_value.off('click');
 			el_ss_selected_value.on('click', function(e){
 				let in_this = $(this);

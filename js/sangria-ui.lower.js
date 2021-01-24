@@ -43,12 +43,6 @@ var SangriaUI = {
   UI_SELECT: {
     targetSelector: '.sangria-select',
     targetNameList: [],
-    closeMode: 'default',
-    // default, leave, item_leave, focus_out
-    closeDefault: [],
-    closeLeave: [],
-    closeItemLeave: [],
-    closeFocusOut: [],
     construct: function construct() {
       var _this = this;
 
@@ -78,10 +72,16 @@ var SangriaUI = {
         targetId = typeof targetId == 'undefined' ? '' : targetId;
         var targetClass = el_select.attr('data-ss-class');
         targetClass = typeof targetClass == 'undefined' ? '' : targetClass;
-        var closeMode = el_select.attr('data-ss-close-mode');
+        var closeMode = el_select.attr('data-ss-close-mode'); // todo 화살표 폰트로 처리
 
-        _this.addCloseModeNameList(targetName, closeMode); // 감싼 영역 추가
+        var arrowType = el_select.attr('data-ss-arrow-type');
+        var arrowTypeClass = " arrow_image ";
 
+        if (arrowType == 'font') {
+          arrowTypeClass = ' arrow_font ';
+        }
+
+        targetClass += arrowTypeClass; // 감싼 영역 추가
 
         var selectWrap = "<div id=\"".concat(targetId, "\" class=\"ss_wrap ss_").concat(targetName, " ").concat(targetClass, " close\"></div>");
         el_select.wrap(selectWrap);
@@ -99,40 +99,6 @@ var SangriaUI = {
 
         _this.setSelectText(targetName);
       });
-    },
-
-    /**
-     * 닫기 모드 설정 목록 추가
-     * add name for close mode
-     */
-    addCloseModeNameList: function addCloseModeNameList(targetName, closeMode) {
-      if (!targetName || !closeMode) {
-        return true;
-      }
-
-      var _this = this;
-
-      switch (closeMode) {
-        case 'default':
-          _this.closeDefault.push(targetName);
-
-          break;
-
-        case 'leave':
-          _this.closeLeave.push(targetName);
-
-          break;
-
-        case 'item_leave':
-          _this.closeItemLeave.push(targetName);
-
-          break;
-
-        case 'focus_out':
-          _this.closeFocusOut.push(targetName);
-
-          break;
-      }
     },
 
     /**

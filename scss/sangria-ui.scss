@@ -13,8 +13,10 @@ select.sangria-select{
 		.ss_selected_value{
 			border-radius: 3px 3px 0 0;
 			border-bottom: none;
+		}
 
-			&:after{
+		&.arrow_image{
+			.ss_selected_value:after{
 				background-position: 0 0;
 			}
 		}
@@ -23,6 +25,22 @@ select.sangria-select{
 	&.close{
 		ul.ss_option_list{
 			display: none;
+		}
+	}
+
+	&.arrow_image{
+		.ss_selected_value:after{
+			content: '　';
+			width: 10px;
+			height: 14px;
+			background-image: url("../image/su-arrow.svg");
+			background-repeat: no-repeat;
+			background-size: cover;
+			position: absolute;
+			right: 5px;
+			top: 50%;
+			margin-top: -7px;
+			background-position: -18px 0;
 		}
 	}
 }
@@ -42,20 +60,6 @@ select.sangria-select{
 	border: 1px solid $borderColor;
 	z-index: 500;
 	border-radius: 3px;
-
-	&:after{
-		content: '　';
-		width: 10px;
-		height: 14px;
-		background-image: url("../image/su-arrow.svg");
-		background-repeat: no-repeat;
-		background-size: cover;
-		position: absolute;
-		right: 5px;
-		top: 50%;
-		margin-top: -7px;
-		background-position: -18px 0;
-	}
 }
 
 ul.ss_option_list{

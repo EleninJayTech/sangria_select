@@ -43,12 +43,6 @@ let SangriaUI={
 		targetSelector:'.sangria-select',
 		targetNameList:[],
 
-		closeMode:'default', // default, leave, item_leave, focus_out
-		closeDefault:[],
-		closeLeave:[],
-		closeItemLeave:[],
-		closeFocusOut:[],
-
 		construct:function(){
 			let _this = this;
 			if( $(_this.targetSelector).length == 0 ){
@@ -73,11 +67,19 @@ let SangriaUI={
 
 				let targetId = el_select.attr('data-ss-id');
 				targetId = (typeof targetId == 'undefined' ? '' : targetId);
+
 				let targetClass = el_select.attr('data-ss-class');
 				targetClass = (typeof targetClass == 'undefined' ? '' : targetClass);
+
 				let closeMode = el_select.attr('data-ss-close-mode');
 
-				_this.addCloseModeNameList(targetName, closeMode);
+				// todo 화살표 폰트로 처리
+				let arrowType = el_select.attr('data-ss-arrow-type');
+				let arrowTypeClass = " arrow_image ";
+				if( arrowType == 'font' ){
+					arrowTypeClass = ' arrow_font '
+				}
+				targetClass += arrowTypeClass;
 
 				// 감싼 영역 추가
 				let selectWrap = `<div id="${targetId}" class="ss_wrap ss_${targetName} ${targetClass} close"></div>`;
@@ -97,32 +99,6 @@ let SangriaUI={
 				el_select.parent('.ss_wrap').append(selectHtml);
 				_this.setSelectText(targetName);
 			});
-		},
-
-		/**
-		 * 닫기 모드 설정 목록 추가
-		 * add name for close mode
-		 */
-		addCloseModeNameList:function(targetName, closeMode){
-			if( !targetName || !closeMode ){
-				return true;
-			}
-			let _this = this;
-
-			switch(closeMode){
-				case 'default':
-					_this.closeDefault.push(targetName);
-					break;
-				case 'leave':
-					_this.closeLeave.push(targetName);
-					break;
-				case 'item_leave':
-					_this.closeItemLeave.push(targetName);
-					break;
-				case 'focus_out':
-					_this.closeFocusOut.push(targetName);
-					break;
-			}
 		},
 
 		/**

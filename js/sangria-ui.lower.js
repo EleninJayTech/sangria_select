@@ -73,6 +73,11 @@ var SangriaUI = {
         var targetClass = el_select.attr('data-ss-class');
         targetClass = typeof targetClass == 'undefined' ? '' : targetClass;
         var closeMode = el_select.attr('data-ss-close-mode');
+
+        if (closeMode == 'click') {
+          targetClass += ' leave_close_off ';
+        }
+
         var arrowType = el_select.attr('data-ss-arrow-type');
         var arrowTypeClass = " font ";
 
@@ -82,7 +87,7 @@ var SangriaUI = {
 
         targetClass += arrowTypeClass; // 감싼 영역 추가
 
-        var selectWrap = "<div id=\"".concat(targetId, "\" class=\"ss_wrap ss_").concat(targetName, " ").concat(targetClass, " close\"></div>");
+        var selectWrap = "<div id=\"".concat(targetId, "\" class=\"ss_wrap ss_").concat(targetName, " ").concat(targetClass, " close\" data-ss-name=\"").concat(targetName, "\"></div>");
         el_select.wrap(selectWrap);
         var selectHtml = '';
         selectHtml += "<a href=\"#\" class=\"ss_selected_value\" title=\"\" data-ss-name=\"".concat(targetName, "\"></a>");
@@ -167,11 +172,23 @@ var SangriaUI = {
     setEvent: function setEvent() {
       var _this = this;
 
+      var el_ss_wrap = $(".ss_wrap");
       var el_ss_selected_value = $("a.ss_selected_value");
       var el_ss_option_list = $('.ss_wrap .ss_option_list > li');
+
+      if (el_ss_wrap.is('.leave_close_off') == false) {
+        el_ss_wrap.off('mouseleave');
+        el_ss_wrap.on('mouseleave', function () {
+          var in_this = $(this);
+          var selected_name = in_this.attr('data-ss-name');
+
+          _this.itemListClose(selected_name);
+        });
+      }
       /**
        * option 클릭 이벤트
        */
+
 
       el_ss_option_list.off('click');
       el_ss_option_list.on('click', function (e) {

@@ -72,6 +72,9 @@ let SangriaUI={
 				targetClass = (typeof targetClass == 'undefined' ? '' : targetClass);
 
 				let closeMode = el_select.attr('data-ss-close-mode');
+				if( closeMode == 'click' ){
+					targetClass += ' leave_close_off ';
+				}
 
 				let arrowType = el_select.attr('data-ss-arrow-type');
 				let arrowTypeClass = " font ";
@@ -81,7 +84,7 @@ let SangriaUI={
 				targetClass += arrowTypeClass;
 
 				// 감싼 영역 추가
-				let selectWrap = `<div id="${targetId}" class="ss_wrap ss_${targetName} ${targetClass} close"></div>`;
+				let selectWrap = `<div id="${targetId}" class="ss_wrap ss_${targetName} ${targetClass} close" data-ss-name="${targetName}"></div>`;
 				el_select.wrap(selectWrap);
 
 				let selectHtml = '';
@@ -160,8 +163,18 @@ let SangriaUI={
 		 */
 		setEvent:function(){
 			let _this = this;
+			let el_ss_wrap = $(".ss_wrap");
 			let el_ss_selected_value = $("a.ss_selected_value");
 			let el_ss_option_list = $('.ss_wrap .ss_option_list > li');
+
+			if( el_ss_wrap.is('.leave_close_off') == false ){
+				el_ss_wrap.off('mouseleave');
+				el_ss_wrap.on('mouseleave', function(){
+					let in_this = $(this);
+					let selected_name = in_this.attr('data-ss-name');
+					_this.itemListClose(selected_name);
+				});
+			}
 
 			/**
 			 * option 클릭 이벤트

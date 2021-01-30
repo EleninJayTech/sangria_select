@@ -73,11 +73,10 @@ let SangriaUI={
 
 				let closeMode = el_select.attr('data-ss-close-mode');
 
-				// todo 화살표 폰트로 처리
 				let arrowType = el_select.attr('data-ss-arrow-type');
-				let arrowTypeClass = " arrow_image ";
-				if( arrowType == 'font' ){
-					arrowTypeClass = ' arrow_font '
+				let arrowTypeClass = " font ";
+				if( arrowType == 'image' ){
+					arrowTypeClass = ' image '
 				}
 				targetClass += arrowTypeClass;
 
@@ -108,7 +107,15 @@ let SangriaUI={
 		setSelectText:function(targetName){
 			let el_selectedTarget = $(`select[name='${targetName}'] option:selected`);
 			let targetText = el_selectedTarget.text();
-			$(`.ss_wrap.ss_${targetName} a.ss_selected_value`).text(targetText).attr('title', targetText);
+			let el_selected_value = $(`.ss_wrap.ss_${targetName} a.ss_selected_value`);
+			el_selected_value.text(targetText).attr('title', targetText);
+
+			let el_select = $(`select[name='${targetName}']`);
+			let arrowType = el_select.attr('data-ss-arrow-type');
+			if( typeof arrowType == 'undefined' || arrowType == 'font' || arrowType == '' ){
+				let font_icon = "<i class=\"su-icon icon-su-arrow-down\"></i>";
+				el_selected_value.append(font_icon);
+			}
 		},
 
 		/**
@@ -117,6 +124,7 @@ let SangriaUI={
 		 * @param targetValue
 		 */
 		setSelectProp:function(targetName, targetValue){
+			let _this = this;
 			let el_selectedTarget = $(`select[name='${targetName}']`);
 
 			if( SangriaUI.jQueryVersionConfirm(1,6) ){
@@ -126,7 +134,7 @@ let SangriaUI={
 			}
 
 			el_selectedTarget.trigger('change');
-			$(`.ss_wrap.ss_${targetName}`).removeClass('open').addClass('close');
+			_this.itemListClose(targetName);
 		},
 
 		/**
@@ -135,6 +143,7 @@ let SangriaUI={
 		 */
 		itemListOpen:function(targetName){
 			$(`.ss_wrap.ss_${targetName}`).removeClass('close').addClass('open');
+			$(`.ss_wrap.ss_${targetName}`).find('.su-icon.icon-su-arrow-down').removeClass('icon-su-arrow-down').addClass('icon-su-arrow-up');
 		},
 
 		/**
@@ -143,6 +152,7 @@ let SangriaUI={
 		 */
 		itemListClose:function(targetName){
 			$(`.ss_wrap.ss_${targetName}`).removeClass('open').addClass('close');
+			$(`.ss_wrap.ss_${targetName}`).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
 		},
 
 		/**
@@ -175,7 +185,13 @@ let SangriaUI={
 			el_ss_selected_value.on('click', function(e){
 				let in_this = $(this);
 				let selected_name = in_this.attr('data-ss-name');
-				$(`.ss_wrap.ss_${selected_name}`).toggleClass('close').toggleClass('open');
+
+				let closeCheck = $(`.ss_wrap.ss_${selected_name}`).is('.close');
+				if( closeCheck == true ){
+					_this.itemListOpen(selected_name);
+				} else {
+					_this.itemListClose(selected_name);
+				}
 
 				e.preventDefault();
 				return false;

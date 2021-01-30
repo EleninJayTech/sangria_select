@@ -72,13 +72,12 @@ var SangriaUI = {
         targetId = typeof targetId == 'undefined' ? '' : targetId;
         var targetClass = el_select.attr('data-ss-class');
         targetClass = typeof targetClass == 'undefined' ? '' : targetClass;
-        var closeMode = el_select.attr('data-ss-close-mode'); // todo 화살표 폰트로 처리
-
+        var closeMode = el_select.attr('data-ss-close-mode');
         var arrowType = el_select.attr('data-ss-arrow-type');
-        var arrowTypeClass = " arrow_image ";
+        var arrowTypeClass = " font ";
 
-        if (arrowType == 'font') {
-          arrowTypeClass = ' arrow_font ';
+        if (arrowType == 'image') {
+          arrowTypeClass = ' image ';
         }
 
         targetClass += arrowTypeClass; // 감싼 영역 추가
@@ -108,7 +107,15 @@ var SangriaUI = {
     setSelectText: function setSelectText(targetName) {
       var el_selectedTarget = $("select[name='".concat(targetName, "'] option:selected"));
       var targetText = el_selectedTarget.text();
-      $(".ss_wrap.ss_".concat(targetName, " a.ss_selected_value")).text(targetText).attr('title', targetText);
+      var el_selected_value = $(".ss_wrap.ss_".concat(targetName, " a.ss_selected_value"));
+      el_selected_value.text(targetText).attr('title', targetText);
+      var el_select = $("select[name='".concat(targetName, "']"));
+      var arrowType = el_select.attr('data-ss-arrow-type');
+
+      if (typeof arrowType == 'undefined' || arrowType == 'font' || arrowType == '') {
+        var font_icon = "<i class=\"su-icon icon-su-arrow-down\"></i>";
+        el_selected_value.append(font_icon);
+      }
     },
 
     /**
@@ -117,6 +124,8 @@ var SangriaUI = {
      * @param targetValue
      */
     setSelectProp: function setSelectProp(targetName, targetValue) {
+      var _this = this;
+
       var el_selectedTarget = $("select[name='".concat(targetName, "']"));
 
       if (SangriaUI.jQueryVersionConfirm(1, 6)) {
@@ -130,7 +139,8 @@ var SangriaUI = {
       }
 
       el_selectedTarget.trigger('change');
-      $(".ss_wrap.ss_".concat(targetName)).removeClass('open').addClass('close');
+
+      _this.itemListClose(targetName);
     },
 
     /**
@@ -139,6 +149,7 @@ var SangriaUI = {
      */
     itemListOpen: function itemListOpen(targetName) {
       $(".ss_wrap.ss_".concat(targetName)).removeClass('close').addClass('open');
+      $(".ss_wrap.ss_".concat(targetName)).find('.su-icon.icon-su-arrow-down').removeClass('icon-su-arrow-down').addClass('icon-su-arrow-up');
     },
 
     /**
@@ -147,6 +158,7 @@ var SangriaUI = {
      */
     itemListClose: function itemListClose(targetName) {
       $(".ss_wrap.ss_".concat(targetName)).removeClass('open').addClass('close');
+      $(".ss_wrap.ss_".concat(targetName)).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
     },
 
     /**
@@ -182,7 +194,14 @@ var SangriaUI = {
       el_ss_selected_value.on('click', function (e) {
         var in_this = $(this);
         var selected_name = in_this.attr('data-ss-name');
-        $(".ss_wrap.ss_".concat(selected_name)).toggleClass('close').toggleClass('open');
+        var closeCheck = $(".ss_wrap.ss_".concat(selected_name)).is('.close');
+
+        if (closeCheck == true) {
+          _this.itemListOpen(selected_name);
+        } else {
+          _this.itemListClose(selected_name);
+        }
+
         e.preventDefault();
         return false;
       });

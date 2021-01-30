@@ -15,7 +15,7 @@ select.sangria-select{
 			border-bottom: none;
 		}
 
-		&.arrow_image{
+		&.image{
 			.ss_selected_value:after{
 				background-position: 0 0;
 			}
@@ -28,7 +28,7 @@ select.sangria-select{
 		}
 	}
 
-	&.arrow_image{
+	&.image{
 		.ss_selected_value:after{
 			content: '　';
 			width: 10px;
@@ -60,6 +60,19 @@ select.sangria-select{
 	border: 1px solid $borderColor;
 	z-index: 500;
 	border-radius: 3px;
+
+	.su-icon{
+		&.icon-su-arrow-down{
+			position: absolute;
+			right: 5px;
+			top: 10px;
+		}
+		&.icon-su-arrow-up{
+			position: absolute;
+			right: 5px;
+			top: 9px;
+		}
+	}
 }
 
 ul.ss_option_list{

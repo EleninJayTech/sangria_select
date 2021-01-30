@@ -11,13 +11,13 @@ select.sangria-select {
   border-radius: 3px 3px 0 0;
   border-bottom: none;
 }
-.ss_wrap.open.arrow_image .ss_selected_value:after {
+.ss_wrap.open.image .ss_selected_value:after {
   background-position: 0 0;
 }
 .ss_wrap.close ul.ss_option_list {
   display: none;
 }
-.ss_wrap.arrow_image .ss_selected_value:after {
+.ss_wrap.image .ss_selected_value:after {
   content: "　";
   width: 10px;
   height: 14px;
@@ -46,6 +46,16 @@ select.sangria-select {
   border: 1px solid #555555;
   z-index: 500;
   border-radius: 3px;
+}
+.ss_selected_value .su-icon.icon-su-arrow-down {
+  position: absolute;
+  right: 5px;
+  top: 10px;
+}
+.ss_selected_value .su-icon.icon-su-arrow-up {
+  position: absolute;
+  right: 5px;
+  top: 9px;
 }
 
 ul.ss_option_list {

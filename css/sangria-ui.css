@@ -86,7 +86,7 @@ ul.ss_option_list::-webkit-scrollbar {
   width: 5.2px;
 }
 ul.ss_option_list::-webkit-scrollbar-track {
-  background-color: #fff;
+  background-color: #eee;
 }
 ul.ss_option_list::-webkit-scrollbar-thumb {
   background: #ddd;

@@ -1,11 +1,16 @@
 "use strict";
 
+/**
+ * Custom Form UI
+ * todo selector 메모리 줄이기
+ * @type {{UI_SELECT: {targetSelector: string, itemListShowType: SangriaUI.UI_SELECT.itemListShowType, targetNameList: [], setSelectText: SangriaUI.UI_SELECT.setSelectText, setEvent: SangriaUI.UI_SELECT.setEvent, construct: (function(): boolean), itemListOpen: SangriaUI.UI_SELECT.itemListOpen, makeHtml: SangriaUI.UI_SELECT.makeHtml, itemListClose: SangriaUI.UI_SELECT.itemListClose, setSelectProp: SangriaUI.UI_SELECT.setSelectProp}, jQueryVersionConfirm: (function(int, int, int): boolean), jQueryEventCheck: SangriaUI.jQueryEventCheck}}
+ */
 var SangriaUI = {
   /**
    * jQuery 버전 검증
    * @param {int} firstVersion
-   * @param {int} [mainVersion]
-   * @param {int} [subVersion]
+   * @param {int} mainVersion
+   * @param {int} subVersion
    * @returns {boolean}
    */
   jQueryVersionConfirm: function jQueryVersionConfirm(firstVersion, mainVersion, subVersion) {
@@ -40,9 +45,18 @@ var SangriaUI = {
       $.fn.off = $.fn.unbind;
     }
   },
+
+  /**
+   * select box
+   */
   UI_SELECT: {
     targetSelector: '.sangria-select',
     targetNameList: [],
+
+    /**
+     * 생성자
+     * @returns {boolean}
+     */
     construct: function construct() {
       var _this = this;
 
@@ -56,7 +70,7 @@ var SangriaUI = {
     },
 
     /**
-     * HTML 생성
+     * SELECT BOX HTML 생성
      */
     makeHtml: function makeHtml() {
       var _this = this;
@@ -165,6 +179,11 @@ var SangriaUI = {
       $(".ss_wrap.ss_".concat(targetName)).removeClass('open').addClass('close');
       $(".ss_wrap.ss_".concat(targetName)).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
     },
+
+    /**
+     * 위치에 따라 옵션 목록이 위로 열리거나 아래로 열린다
+     * @param targetName
+     */
     itemListShowType: function itemListShowType(targetName) {
       var el_target = $(".ss_wrap.ss_".concat(targetName));
       var select_h = el_target.outerHeight();
@@ -183,7 +202,7 @@ var SangriaUI = {
     },
 
     /**
-     * 필요 이벤트 실행
+     * 이벤트
      */
     setEvent: function setEvent() {
       var _this = this;
@@ -205,7 +224,7 @@ var SangriaUI = {
         var targetName = targetElement.attr('name');
 
         _this.itemListShowType(targetName);
-      });
+      }); // mouse out 할때 옵션 목록 닫기
 
       if (el_ss_wrap.is('.leave_close_off') == false) {
         el_ss_wrap.off('mouseleave');
@@ -215,10 +234,7 @@ var SangriaUI = {
 
           _this.itemListClose(selected_name);
         });
-      }
-      /**
-       * option 클릭 이벤트
-       */
+      } // 옵션 클릭
 
 
       el_ss_option_list.off('click');
@@ -233,10 +249,7 @@ var SangriaUI = {
 
         e.preventDefault();
         return false;
-      });
-      /**
-       * select 클릭 이벤트
-       */
+      }); // select 클릭
 
       el_ss_selected_value.off('click');
       el_ss_selected_value.on('click', function (e) {

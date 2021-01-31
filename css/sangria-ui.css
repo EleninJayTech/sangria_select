@@ -8,7 +8,11 @@ select.sangria-select {
   display: inline-block;
   width: 120px;
 }
-.ss_wrap.open .ss_selected_value {
+.ss_wrap.open.list_up .ss_selected_value {
+  border-radius: 0 0 3px 3px;
+  border-top: none;
+}
+.ss_wrap.open.list_down .ss_selected_value {
   border-radius: 3px 3px 0 0;
   border-bottom: none;
 }
@@ -61,16 +65,11 @@ select.sangria-select {
 }
 
 ul.ss_option_list {
-  border-radius: 0 0 3px 3px;
   box-sizing: border-box;
   position: absolute;
   width: 100%;
   margin: 0;
   padding: 0;
-  border-top: none;
-  border-left: 1px solid #555555;
-  border-right: 1px solid #555555;
-  border-bottom: 1px solid #555555;
   background: #fff;
   z-index: 1000;
   max-height: 200px;
@@ -117,4 +116,21 @@ ul.ss_option_list li {
 }
 ul.ss_option_list li:hover {
   background: #e3e3e3;
+}
+
+.ss_wrap.list_up .ss_option_list {
+  border-radius: 3px 3px 0 0;
+  border-top: 1px solid #555555;
+  border-left: 1px solid #555555;
+  border-right: 1px solid #555555;
+  border-bottom: none;
+  bottom: 31px;
+}
+
+.ss_wrap.list_down .ss_option_list {
+  border-radius: 0 0 3px 3px;
+  border-top: none;
+  border-left: 1px solid #555555;
+  border-right: 1px solid #555555;
+  border-bottom: 1px solid #555555;
 }

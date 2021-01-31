@@ -165,6 +165,22 @@ var SangriaUI = {
       $(".ss_wrap.ss_".concat(targetName)).removeClass('open').addClass('close');
       $(".ss_wrap.ss_".concat(targetName)).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
     },
+    itemListShowType: function itemListShowType(targetName) {
+      var el_target = $(".ss_wrap.ss_".concat(targetName));
+      var select_h = el_target.outerHeight();
+      var item_h = el_target.find(".ss_option_list").outerHeight();
+      var select_top = el_target.find(".ss_selected_value").offset().top;
+      var window_h = $(window).height();
+      var scroll_t = $(window).scrollTop();
+      var target_pos = select_top + select_h + item_h;
+      var this_pos = window_h + scroll_t;
+
+      if (target_pos > this_pos) {
+        el_target.removeClass('list_down').addClass('list_up');
+      } else {
+        el_target.removeClass('list_up').addClass('list_down');
+      }
+    },
 
     /**
      * 필요 이벤트 실행
@@ -172,9 +188,24 @@ var SangriaUI = {
     setEvent: function setEvent() {
       var _this = this;
 
+      var targetSelector = _this.targetSelector;
       var el_ss_wrap = $(".ss_wrap");
       var el_ss_selected_value = $("a.ss_selected_value");
       var el_ss_option_list = $('.ss_wrap .ss_option_list > li');
+      $(window).on('scroll', function () {
+        $(targetSelector).each(function () {
+          var targetElement = $(this);
+          var targetName = targetElement.attr('name');
+
+          _this.itemListShowType(targetName);
+        });
+      });
+      $(targetSelector).each(function () {
+        var targetElement = $(this);
+        var targetName = targetElement.attr('name');
+
+        _this.itemListShowType(targetName);
+      });
 
       if (el_ss_wrap.is('.leave_close_off') == false) {
         el_ss_wrap.off('mouseleave');

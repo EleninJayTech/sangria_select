@@ -158,14 +158,46 @@ let SangriaUI={
 			$(`.ss_wrap.ss_${targetName}`).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
 		},
 
+		itemListShowType:function(targetName){
+			let el_target = $(`.ss_wrap.ss_${targetName}`);
+			let select_h = el_target.outerHeight();
+			let item_h = el_target.find(".ss_option_list").outerHeight();
+			let select_top = el_target.find(".ss_selected_value").offset().top;
+			let window_h = $(window).height();
+			let scroll_t = $(window).scrollTop();
+
+			let target_pos = select_top + select_h + item_h;
+			let this_pos = window_h + scroll_t;
+			if( target_pos > this_pos ){
+				el_target.removeClass('list_down').addClass('list_up');
+			} else {
+				el_target.removeClass('list_up').addClass('list_down');
+			}
+		},
+
 		/**
 		 * 필요 이벤트 실행
 		 */
 		setEvent:function(){
 			let _this = this;
+			let targetSelector = _this.targetSelector;
 			let el_ss_wrap = $(".ss_wrap");
 			let el_ss_selected_value = $("a.ss_selected_value");
 			let el_ss_option_list = $('.ss_wrap .ss_option_list > li');
+
+			$(window).on('scroll', function(){
+				$(targetSelector).each(function(){
+					let targetElement = $(this);
+					let targetName = targetElement.attr('name');
+					_this.itemListShowType(targetName);
+				});
+			});
+
+			$(targetSelector).each(function(){
+				let targetElement = $(this);
+				let targetName = targetElement.attr('name');
+				_this.itemListShowType(targetName);
+			});
 
 			if( el_ss_wrap.is('.leave_close_off') == false ){
 				el_ss_wrap.off('mouseleave');

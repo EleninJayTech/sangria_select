@@ -31,15 +31,15 @@
 	<div style="width: 100%;height: 400px;"></div>
 	<div style="width: 100%;height: 1000px;"></div>
 
-	<select name="test_2" class="sangria-select" data-ss-arrow-type="image">
-		<option value="">선택</option>
-		<option value="22">22</option>
-		<option value="bb">비비</option>
-		<option value="라마">라마</option>
-	</select>
-
 <!--	<script src="js/sangria-ui.js"></script>-->
 	<script src="js/sangria-ui.lower.js"></script>
 <!--	<script src="js/sangria-ui.min.js"></script>-->
+	<script>
+		$(window).load(function(){
+			let asdfdsf = `<select name="test_2" class="sangria-select" data-ss-arrow-type="image"><option value="">선택</option><option value="22">22</option><option value="bb">비비</option><option value="라마">라마</option></select>`;
+			$("body").append(asdfdsf);
+			SangriaUI.UI_SELECT.construct();
+		});
+	</script>
 </body>
 </html>

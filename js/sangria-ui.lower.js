@@ -2,13 +2,15 @@
 
 /**
  * Custom Form UI
+ * @author eleninjaytech@gmail.com
+ * @type {{UI_SELECT: {targetSelector: string, itemListShowType: SangriaUI.UI_SELECT.itemListShowType, setSelectText: SangriaUI.UI_SELECT.setSelectText, setEvent: SangriaUI.UI_SELECT.setEvent, construct: (function(): boolean), select_no: number, itemListOpen: SangriaUI.UI_SELECT.itemListOpen, makeHtml: SangriaUI.UI_SELECT.makeHtml, itemListClose: SangriaUI.UI_SELECT.itemListClose, setSelectProp: SangriaUI.UI_SELECT.setSelectProp}, jQueryVersionConfirm: (function(int, int=, int=): boolean), jQueryEventCheck: SangriaUI.jQueryEventCheck}}
  */
 var SangriaUI = {
   /**
    * jQuery 버전 검증
    * @param {int} firstVersion
-   * @param {int} mainVersion
-   * @param {int} subVersion
+   * @param {int} [mainVersion]
+   * @param {int} [subVersion]
    * @returns {boolean}
    */
   jQueryVersionConfirm: function jQueryVersionConfirm(firstVersion, mainVersion, subVersion) {
@@ -124,14 +126,15 @@ var SangriaUI = {
 
     /**
      * 선택 값 표시
-     * @param targetName
+     * @param {string} targetName
      */
     setSelectText: function setSelectText(targetName) {
-      var el_selectedTarget = $("select[data-ss-name='".concat(targetName, "'] option:selected"));
+      var el_ss_wrap = $(".ss_wrap[data-ss-name='".concat(targetName, "']"));
+      var el_select = el_ss_wrap.find("select");
+      var el_selectedTarget = el_ss_wrap.find("select option:selected");
+      var el_selected_value = el_ss_wrap.find("a.ss_selected_value");
       var targetText = el_selectedTarget.text();
-      var el_selected_value = $(".ss_wrap[data-ss-name='".concat(targetName, "'] a.ss_selected_value"));
       el_selected_value.text(targetText).attr('title', targetText);
-      var el_select = $("select[data-ss-name='".concat(targetName, "']"));
       var arrowType = el_select.attr('data-ss-arrow-type');
 
       if (typeof arrowType == 'undefined' || arrowType == 'font' || arrowType == '') {
@@ -142,7 +145,7 @@ var SangriaUI = {
 
     /**
      * select 선택된 속성 변경
-     * @param targetName
+     * @param {string} targetName
      * @param targetValue
      */
     setSelectProp: function setSelectProp(targetName, targetValue) {
@@ -167,25 +170,27 @@ var SangriaUI = {
 
     /**
      * 목록 열기
-     * @param targetName
+     * @param {string} targetName
      */
     itemListOpen: function itemListOpen(targetName) {
-      $(".ss_wrap[data-ss-name='".concat(targetName, "']")).removeClass('close').addClass('open');
-      $(".ss_wrap[data-ss-name='".concat(targetName, "']")).find('.su-icon.icon-su-arrow-down').removeClass('icon-su-arrow-down').addClass('icon-su-arrow-up');
+      var el_ss_wrap = $(".ss_wrap[data-ss-name='".concat(targetName, "']"));
+      el_ss_wrap.removeClass('close').addClass('open');
+      el_ss_wrap.find('.su-icon.icon-su-arrow-down').removeClass('icon-su-arrow-down').addClass('icon-su-arrow-up');
     },
 
     /**
      * 목록 닫기
-     * @param targetName
+     * @param {string} targetName
      */
     itemListClose: function itemListClose(targetName) {
-      $(".ss_wrap[data-ss-name='".concat(targetName, "']")).removeClass('open').addClass('close');
-      $(".ss_wrap[data-ss-name='".concat(targetName, "']")).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
+      var el_ss_wrap = $(".ss_wrap[data-ss-name='".concat(targetName, "']"));
+      el_ss_wrap.removeClass('open').addClass('close');
+      el_ss_wrap.find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
     },
 
     /**
      * 위치에 따라 옵션 목록이 위로 열리거나 아래로 열린다
-     * @param targetName
+     * @param {string} targetName
      */
     itemListShowType: function itemListShowType(targetName) {
       var el_target = $(".ss_wrap[data-ss-name='".concat(targetName, "']"));
@@ -210,24 +215,9 @@ var SangriaUI = {
     setEvent: function setEvent() {
       var _this = this;
 
-      var targetSelector = _this.targetSelector;
       var el_ss_wrap = $(".ss_wrap");
-      var el_ss_selected_value = $("a.ss_selected_value");
-      var el_ss_option_list = $('.ss_wrap .ss_option_list > li');
-      $(window).on('scroll', function () {
-        $(targetSelector).each(function () {
-          var targetElement = $(this);
-          var targetName = targetElement.attr('data-ss-name');
-
-          _this.itemListShowType(targetName);
-        });
-      });
-      $(targetSelector).each(function () {
-        var targetElement = $(this);
-        var targetName = targetElement.attr('data-ss-name');
-
-        _this.itemListShowType(targetName);
-      }); // mouse out 할때 옵션 목록 닫기
+      var el_ss_selected_value = el_ss_wrap.find("a.ss_selected_value");
+      var el_ss_option_list = el_ss_wrap.find('.ss_option_list > li'); // mouse out 할때 옵션 목록 닫기
 
       if (el_ss_wrap.is('.leave_close_off') == false) {
         el_ss_wrap.off('mouseleave');
@@ -245,11 +235,14 @@ var SangriaUI = {
         var in_this = $(this);
         var selected_name = in_this.attr('data-ss-name');
         var selected_value = in_this.attr('data-ss-value');
+        var el_ss_wrap = $(".ss_wrap[data-ss-name='".concat(selected_name, "']"));
+        var el_select_option = el_ss_wrap.find('select option');
 
         _this.setSelectProp(selected_name, selected_value);
 
         _this.setSelectText(selected_name);
 
+        el_select_option.trigger('click');
         e.preventDefault();
         return false;
       }); // select 클릭
@@ -258,7 +251,9 @@ var SangriaUI = {
       el_ss_selected_value.on('click', function (e) {
         var in_this = $(this);
         var selected_name = in_this.attr('data-ss-name');
-        var closeCheck = $(".ss_wrap[data-ss-name='".concat(selected_name, "']")).is('.close');
+        var el_ss_wrap = $(".ss_wrap[data-ss-name='".concat(selected_name, "']"));
+        var el_select = el_ss_wrap.find("select");
+        var closeCheck = el_ss_wrap.is('.close');
 
         if (closeCheck == true) {
           _this.itemListOpen(selected_name);
@@ -266,6 +261,7 @@ var SangriaUI = {
           _this.itemListClose(selected_name);
         }
 
+        el_select.trigger('click');
         e.preventDefault();
         return false;
       });
@@ -277,6 +273,19 @@ if (typeof jQuery == 'function') {
   jQuery(function ($) {
     SangriaUI.jQueryEventCheck();
     SangriaUI.UI_SELECT.construct();
+    var targetSelector = SangriaUI.UI_SELECT.targetSelector;
+    $(window).on('scroll', function () {
+      $(targetSelector).each(function () {
+        var targetElement = $(this);
+        var targetName = targetElement.attr('data-ss-name');
+        SangriaUI.UI_SELECT.itemListShowType(targetName);
+      });
+    });
+    $(targetSelector).each(function () {
+      var targetElement = $(this);
+      var targetName = targetElement.attr('data-ss-name');
+      SangriaUI.UI_SELECT.itemListShowType(targetName);
+    });
   });
 }
 

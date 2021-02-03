@@ -1,7 +1,5 @@
 /**
  * Custom Form UI
- * todo selector 메모리 줄이기
- * @type {{UI_SELECT: {targetSelector: string, itemListShowType: SangriaUI.UI_SELECT.itemListShowType, targetNameList: [], setSelectText: SangriaUI.UI_SELECT.setSelectText, setEvent: SangriaUI.UI_SELECT.setEvent, construct: (function(): boolean), itemListOpen: SangriaUI.UI_SELECT.itemListOpen, makeHtml: SangriaUI.UI_SELECT.makeHtml, itemListClose: SangriaUI.UI_SELECT.itemListClose, setSelectProp: SangriaUI.UI_SELECT.setSelectProp}, jQueryVersionConfirm: (function(int, int, int): boolean), jQueryEventCheck: SangriaUI.jQueryEventCheck}}
  */
 let SangriaUI={
 	/**
@@ -49,7 +47,7 @@ let SangriaUI={
 	 */
 	UI_SELECT:{
 		targetSelector:'.sangria-select',
-		targetNameList:[],
+		select_no:0,
 
 		/**
 		 * 생성자
@@ -73,9 +71,16 @@ let SangriaUI={
 
 			$(`select${_this.targetSelector}`).each(function(){
 				let el_select = $(this);
-				let targetName = el_select.attr('name');
-				targetName = (typeof targetName == 'undefined' ? '' : targetName);
-				_this.targetNameList.push(targetName);
+
+				// ss-name 입력되어 있으면 넘기기
+				let attr_ss_name = el_select.attr('data-ss-name');
+				if( typeof attr_ss_name !== 'undefined' ){
+					return true;
+				}
+
+				let targetName = `s_select_${_this.select_no}`;
+				el_select.attr('data-ss-name', targetName);
+				_this.select_no++;
 
 				let targetId = el_select.attr('data-ss-id');
 				targetId = (typeof targetId == 'undefined' ? '' : targetId);
@@ -96,7 +101,7 @@ let SangriaUI={
 				targetClass += arrowTypeClass;
 
 				// 감싼 영역 추가
-				let selectWrap = `<div id="${targetId}" class="ss_wrap ss_${targetName} ${targetClass} close" data-ss-name="${targetName}"></div>`;
+				let selectWrap = `<div id="${targetId}" class="ss_wrap ${targetClass} close" data-ss-name="${targetName}"></div>`;
 				el_select.wrap(selectWrap);
 
 				let selectHtml = '';
@@ -120,12 +125,12 @@ let SangriaUI={
 		 * @param targetName
 		 */
 		setSelectText:function(targetName){
-			let el_selectedTarget = $(`select[name='${targetName}'] option:selected`);
+			let el_selectedTarget = $(`select[data-ss-name='${targetName}'] option:selected`);
 			let targetText = el_selectedTarget.text();
-			let el_selected_value = $(`.ss_wrap.ss_${targetName} a.ss_selected_value`);
+			let el_selected_value = $(`.ss_wrap[data-ss-name='${targetName}'] a.ss_selected_value`);
 			el_selected_value.text(targetText).attr('title', targetText);
 
-			let el_select = $(`select[name='${targetName}']`);
+			let el_select = $(`select[data-ss-name='${targetName}']`);
 			let arrowType = el_select.attr('data-ss-arrow-type');
 			if( typeof arrowType == 'undefined' || arrowType == 'font' || arrowType == '' ){
 				let font_icon = "<i class=\"su-icon icon-su-arrow-down\"></i>";
@@ -140,7 +145,7 @@ let SangriaUI={
 		 */
 		setSelectProp:function(targetName, targetValue){
 			let _this = this;
-			let el_selectedTarget = $(`select[name='${targetName}']`);
+			let el_selectedTarget = $(`select[data-ss-name='${targetName}']`);
 
 			if( SangriaUI.jQueryVersionConfirm(1,6) ){
 				el_selectedTarget.val(targetValue).prop({selected:true}).attr({selected:true});
@@ -157,8 +162,8 @@ let SangriaUI={
 		 * @param targetName
 		 */
 		itemListOpen:function(targetName){
-			$(`.ss_wrap.ss_${targetName}`).removeClass('close').addClass('open');
-			$(`.ss_wrap.ss_${targetName}`).find('.su-icon.icon-su-arrow-down').removeClass('icon-su-arrow-down').addClass('icon-su-arrow-up');
+			$(`.ss_wrap[data-ss-name='${targetName}']`).removeClass('close').addClass('open');
+			$(`.ss_wrap[data-ss-name='${targetName}']`).find('.su-icon.icon-su-arrow-down').removeClass('icon-su-arrow-down').addClass('icon-su-arrow-up');
 		},
 
 		/**
@@ -166,8 +171,8 @@ let SangriaUI={
 		 * @param targetName
 		 */
 		itemListClose:function(targetName){
-			$(`.ss_wrap.ss_${targetName}`).removeClass('open').addClass('close');
-			$(`.ss_wrap.ss_${targetName}`).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
+			$(`.ss_wrap[data-ss-name='${targetName}']`).removeClass('open').addClass('close');
+			$(`.ss_wrap[data-ss-name='${targetName}']`).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
 		},
 
 		/**
@@ -175,7 +180,7 @@ let SangriaUI={
 		 * @param targetName
 		 */
 		itemListShowType:function(targetName){
-			let el_target = $(`.ss_wrap.ss_${targetName}`);
+			let el_target = $(`.ss_wrap[data-ss-name='${targetName}']`);
 			let select_h = el_target.outerHeight();
 			let item_h = el_target.find(".ss_option_list").outerHeight();
 			let select_top = el_target.find(".ss_selected_value").offset().top;
@@ -204,14 +209,14 @@ let SangriaUI={
 			$(window).on('scroll', function(){
 				$(targetSelector).each(function(){
 					let targetElement = $(this);
-					let targetName = targetElement.attr('name');
+					let targetName = targetElement.attr('data-ss-name');
 					_this.itemListShowType(targetName);
 				});
 			});
 
 			$(targetSelector).each(function(){
 				let targetElement = $(this);
-				let targetName = targetElement.attr('name');
+				let targetName = targetElement.attr('data-ss-name');
 				_this.itemListShowType(targetName);
 			});
 
@@ -244,7 +249,7 @@ let SangriaUI={
 				let in_this = $(this);
 				let selected_name = in_this.attr('data-ss-name');
 
-				let closeCheck = $(`.ss_wrap.ss_${selected_name}`).is('.close');
+				let closeCheck = $(`.ss_wrap[data-ss-name='${selected_name}']`).is('.close');
 				if( closeCheck == true ){
 					_this.itemListOpen(selected_name);
 				} else {

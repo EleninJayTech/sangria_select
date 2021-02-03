@@ -2,8 +2,6 @@
 
 /**
  * Custom Form UI
- * todo selector 메모리 줄이기
- * @type {{UI_SELECT: {targetSelector: string, itemListShowType: SangriaUI.UI_SELECT.itemListShowType, targetNameList: [], setSelectText: SangriaUI.UI_SELECT.setSelectText, setEvent: SangriaUI.UI_SELECT.setEvent, construct: (function(): boolean), itemListOpen: SangriaUI.UI_SELECT.itemListOpen, makeHtml: SangriaUI.UI_SELECT.makeHtml, itemListClose: SangriaUI.UI_SELECT.itemListClose, setSelectProp: SangriaUI.UI_SELECT.setSelectProp}, jQueryVersionConfirm: (function(int, int, int): boolean), jQueryEventCheck: SangriaUI.jQueryEventCheck}}
  */
 var SangriaUI = {
   /**
@@ -51,7 +49,7 @@ var SangriaUI = {
    */
   UI_SELECT: {
     targetSelector: '.sangria-select',
-    targetNameList: [],
+    select_no: 0,
 
     /**
      * 생성자
@@ -76,12 +74,17 @@ var SangriaUI = {
       var _this = this;
 
       $("select".concat(_this.targetSelector)).each(function () {
-        var el_select = $(this);
-        var targetName = el_select.attr('name');
-        targetName = typeof targetName == 'undefined' ? '' : targetName;
+        var el_select = $(this); // ss-name 입력되어 있으면 넘기기
 
-        _this.targetNameList.push(targetName);
+        var attr_ss_name = el_select.attr('data-ss-name');
 
+        if (typeof attr_ss_name !== 'undefined') {
+          return true;
+        }
+
+        var targetName = "s_select_".concat(_this.select_no);
+        el_select.attr('data-ss-name', targetName);
+        _this.select_no++;
         var targetId = el_select.attr('data-ss-id');
         targetId = typeof targetId == 'undefined' ? '' : targetId;
         var targetClass = el_select.attr('data-ss-class');
@@ -101,7 +104,7 @@ var SangriaUI = {
 
         targetClass += arrowTypeClass; // 감싼 영역 추가
 
-        var selectWrap = "<div id=\"".concat(targetId, "\" class=\"ss_wrap ss_").concat(targetName, " ").concat(targetClass, " close\" data-ss-name=\"").concat(targetName, "\"></div>");
+        var selectWrap = "<div id=\"".concat(targetId, "\" class=\"ss_wrap ").concat(targetClass, " close\" data-ss-name=\"").concat(targetName, "\"></div>");
         el_select.wrap(selectWrap);
         var selectHtml = '';
         selectHtml += "<a href=\"#\" class=\"ss_selected_value\" title=\"\" data-ss-name=\"".concat(targetName, "\"></a>");
@@ -124,11 +127,11 @@ var SangriaUI = {
      * @param targetName
      */
     setSelectText: function setSelectText(targetName) {
-      var el_selectedTarget = $("select[name='".concat(targetName, "'] option:selected"));
+      var el_selectedTarget = $("select[data-ss-name='".concat(targetName, "'] option:selected"));
       var targetText = el_selectedTarget.text();
-      var el_selected_value = $(".ss_wrap.ss_".concat(targetName, " a.ss_selected_value"));
+      var el_selected_value = $(".ss_wrap[data-ss-name='".concat(targetName, "'] a.ss_selected_value"));
       el_selected_value.text(targetText).attr('title', targetText);
-      var el_select = $("select[name='".concat(targetName, "']"));
+      var el_select = $("select[data-ss-name='".concat(targetName, "']"));
       var arrowType = el_select.attr('data-ss-arrow-type');
 
       if (typeof arrowType == 'undefined' || arrowType == 'font' || arrowType == '') {
@@ -145,7 +148,7 @@ var SangriaUI = {
     setSelectProp: function setSelectProp(targetName, targetValue) {
       var _this = this;
 
-      var el_selectedTarget = $("select[name='".concat(targetName, "']"));
+      var el_selectedTarget = $("select[data-ss-name='".concat(targetName, "']"));
 
       if (SangriaUI.jQueryVersionConfirm(1, 6)) {
         el_selectedTarget.val(targetValue).prop({
@@ -167,8 +170,8 @@ var SangriaUI = {
      * @param targetName
      */
     itemListOpen: function itemListOpen(targetName) {
-      $(".ss_wrap.ss_".concat(targetName)).removeClass('close').addClass('open');
-      $(".ss_wrap.ss_".concat(targetName)).find('.su-icon.icon-su-arrow-down').removeClass('icon-su-arrow-down').addClass('icon-su-arrow-up');
+      $(".ss_wrap[data-ss-name='".concat(targetName, "']")).removeClass('close').addClass('open');
+      $(".ss_wrap[data-ss-name='".concat(targetName, "']")).find('.su-icon.icon-su-arrow-down').removeClass('icon-su-arrow-down').addClass('icon-su-arrow-up');
     },
 
     /**
@@ -176,8 +179,8 @@ var SangriaUI = {
      * @param targetName
      */
     itemListClose: function itemListClose(targetName) {
-      $(".ss_wrap.ss_".concat(targetName)).removeClass('open').addClass('close');
-      $(".ss_wrap.ss_".concat(targetName)).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
+      $(".ss_wrap[data-ss-name='".concat(targetName, "']")).removeClass('open').addClass('close');
+      $(".ss_wrap[data-ss-name='".concat(targetName, "']")).find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
     },
 
     /**
@@ -185,7 +188,7 @@ var SangriaUI = {
      * @param targetName
      */
     itemListShowType: function itemListShowType(targetName) {
-      var el_target = $(".ss_wrap.ss_".concat(targetName));
+      var el_target = $(".ss_wrap[data-ss-name='".concat(targetName, "']"));
       var select_h = el_target.outerHeight();
       var item_h = el_target.find(".ss_option_list").outerHeight();
       var select_top = el_target.find(".ss_selected_value").offset().top;
@@ -214,14 +217,14 @@ var SangriaUI = {
       $(window).on('scroll', function () {
         $(targetSelector).each(function () {
           var targetElement = $(this);
-          var targetName = targetElement.attr('name');
+          var targetName = targetElement.attr('data-ss-name');
 
           _this.itemListShowType(targetName);
         });
       });
       $(targetSelector).each(function () {
         var targetElement = $(this);
-        var targetName = targetElement.attr('name');
+        var targetName = targetElement.attr('data-ss-name');
 
         _this.itemListShowType(targetName);
       }); // mouse out 할때 옵션 목록 닫기
@@ -255,7 +258,7 @@ var SangriaUI = {
       el_ss_selected_value.on('click', function (e) {
         var in_this = $(this);
         var selected_name = in_this.attr('data-ss-name');
-        var closeCheck = $(".ss_wrap.ss_".concat(selected_name)).is('.close');
+        var closeCheck = $(".ss_wrap[data-ss-name='".concat(selected_name, "']")).is('.close');
 
         if (closeCheck == true) {
           _this.itemListOpen(selected_name);

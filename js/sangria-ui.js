@@ -15,22 +15,36 @@ let SangriaUI={
 		let jQueryVersionArray = $.fn.jquery.split('.');
 		let confirmVersion = true;
 
-		if( parseInt(jQueryVersionArray[0]) < firstVersion ){
+		let jQueryVer_1 = parseInt(jQueryVersionArray[0]);
+		let jQueryVer_2 = parseInt(jQueryVersionArray[1]);
+		let jQueryVer_3 = parseInt(jQueryVersionArray[2]);
+
+		// 첫번째 버전보다 작으면
+		if( jQueryVer_1 < firstVersion ){
 			confirmVersion = false;
 		}
-
-		if( jQueryVersionArray.length > 1 && typeof mainVersion == 'number' ){
-			if( parseInt(jQueryVersionArray[1]) < mainVersion ){
+		// 같다면 두번째 버전 체크
+		else if (
+			jQueryVer_1 == firstVersion
+			&& jQueryVersionArray.length > 1
+			&& typeof mainVersion == 'number'
+		){
+			if( jQueryVer_2 < mainVersion ){
 				confirmVersion = false;
+			}
+			// 같다면 세번째 버전 체크
+			else if(
+				jQueryVer_2 == mainVersion
+				&& jQueryVersionArray.length > 2
+				&& typeof subVersion == 'number'
+			){
+				if( jQueryVer_3 < subVersion ){
+					confirmVersion = false;
+				}
 			}
 		}
 
-		if( jQueryVersionArray.length > 2 && typeof subVersion == 'number' ){
-			if( parseInt(jQueryVersionArray[2]) < subVersion ){
-				confirmVersion = false;
-			}
-		}
-
+		console.log(confirmVersion);
 		return confirmVersion;
 	},
 

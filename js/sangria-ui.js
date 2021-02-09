@@ -44,7 +44,6 @@ let SangriaUI={
 			}
 		}
 
-		console.log(confirmVersion);
 		return confirmVersion;
 	},
 
@@ -105,9 +104,11 @@ let SangriaUI={
 				targetClass = (typeof targetClass == 'undefined' ? '' : targetClass);
 
 				let closeMode = el_select.attr('data-ss-close-mode');
+				let closeModeClass = '';
 				if( closeMode == 'click' ){
-					targetClass += ' leave_close_off ';
+					closeModeClass = ' leave_close_off ';
 				}
+				targetClass += closeModeClass;
 
 				let arrowType = el_select.attr('data-ss-arrow-type');
 				let arrowTypeClass = " font ";
@@ -226,14 +227,17 @@ let SangriaUI={
 			let el_ss_option_list = el_ss_wrap.find('.ss_option_list > li');
 
 			// mouse out 할때 옵션 목록 닫기
-			if( el_ss_wrap.is('.leave_close_off') == false ){
-				el_ss_wrap.off('mouseleave');
-				el_ss_wrap.on('mouseleave', function(){
-					let in_this = $(this);
-					let selected_name = in_this.attr('data-ss-name');
-					_this.itemListClose(selected_name);
-				});
-			}
+			el_ss_wrap.each(function(){
+				let this_ss_wrap = $(this);
+				if( this_ss_wrap.is('.leave_close_off') == false ){
+					this_ss_wrap.off('mouseleave');
+					this_ss_wrap.on('mouseleave', function(){
+						let in_this = $(this);
+						let selected_name = in_this.attr('data-ss-name');
+						_this.itemListClose(selected_name);
+					});
+				}
+			});
 
 			// 옵션 클릭
 			el_ss_option_list.off('click');

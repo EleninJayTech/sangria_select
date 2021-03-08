@@ -103,7 +103,13 @@ var SangriaUI = {
           arrowTypeClass = ' image ';
         }
 
-        targetClass += arrowTypeClass; // 존재하는건 삭제
+        targetClass += arrowTypeClass;
+        var disable = el_select.attr('disabled');
+
+        if (disable == true) {
+          targetClass += ' disabled ';
+        } // 존재하는건 삭제
+
 
         $(".ss_wrap[data-ss-name='".concat(targetName, "']")).remove();
         var attr_id = targetId != '' ? "id=\"".concat(targetId, "\"") : '';
@@ -158,15 +164,22 @@ var SangriaUI = {
 
         el_ss_selected_value.off('click');
         el_ss_selected_value.on('click', function (e) {
-          var closeCheck = el_ss_wrap.is('.close');
+          try {
+            if (disable == true) {
+              throw 'click stop';
+            }
 
-          if (closeCheck == true) {
-            _this.itemListOpen(targetName);
-          } else {
-            _this.itemListClose(targetName);
-          }
+            var closeCheck = el_ss_wrap.is('.close');
 
-          el_select.trigger('click');
+            if (closeCheck == true) {
+              _this.itemListOpen(targetName);
+            } else {
+              _this.itemListClose(targetName);
+            }
+
+            el_select.trigger('click');
+          } catch (e) {}
+
           e.preventDefault();
           return false;
         });

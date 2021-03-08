@@ -111,6 +111,11 @@ let SangriaUI={
 				}
 				targetClass += arrowTypeClass;
 
+				let disable = el_select.attr('disabled');
+				if( disable == true ){
+					targetClass += ' disabled ';
+				}
+
 				// 존재하는건 삭제
 				$(`.ss_wrap[data-ss-name='${targetName}']`).remove();
 
@@ -165,14 +170,23 @@ let SangriaUI={
 				// select 클릭
 				el_ss_selected_value.off('click');
 				el_ss_selected_value.on('click', function(e){
-					let closeCheck = el_ss_wrap.is('.close');
-					if( closeCheck == true ){
-						_this.itemListOpen(targetName);
-					} else {
-						_this.itemListClose(targetName);
+					try{
+						if( disable == true ){
+							throw 'click stop';
+						}
+
+						let closeCheck = el_ss_wrap.is('.close');
+						if( closeCheck == true ){
+							_this.itemListOpen(targetName);
+						} else {
+							_this.itemListClose(targetName);
+						}
+
+						el_select.trigger('click');
+					} catch (e){
+
 					}
 
-					el_select.trigger('click');
 					e.preventDefault();
 					return false;
 				});

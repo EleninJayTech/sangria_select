@@ -106,7 +106,7 @@ var SangriaUI = {
         targetClass += arrowTypeClass;
         var disable = el_select.attr('disabled');
 
-        if (disable == true) {
+        if (disable == true || disable == 'disabled') {
           targetClass += ' disabled ';
         } // 존재하는건 삭제
 
@@ -165,7 +165,7 @@ var SangriaUI = {
         el_ss_selected_value.off('click');
         el_ss_selected_value.on('click', function (e) {
           try {
-            if (disable == true) {
+            if (disable == true || disable == 'disabled') {
               throw 'click stop';
             }
 

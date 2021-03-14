@@ -112,7 +112,7 @@ let SangriaUI={
 				targetClass += arrowTypeClass;
 
 				let disable = el_select.attr('disabled');
-				if( disable == true ){
+				if( disable == true || disable == 'disabled' ){
 					targetClass += ' disabled ';
 				}
 
@@ -171,7 +171,7 @@ let SangriaUI={
 				el_ss_selected_value.off('click');
 				el_ss_selected_value.on('click', function(e){
 					try{
-						if( disable == true ){
+						if( disable == true || disable == 'disabled' ){
 							throw 'click stop';
 						}
 

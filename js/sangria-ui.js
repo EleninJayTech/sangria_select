@@ -1,6 +1,6 @@
 /**
  * SangriaUI
- * @type {{UI_SELECT: {targetSelector: string, itemListShowType: SangriaUI.UI_SELECT.itemListShowType, create: (function(string=): boolean), setSelectText: SangriaUI.UI_SELECT.setSelectText, select_no: number, itemListOpen: SangriaUI.UI_SELECT.itemListOpen, itemListClose: SangriaUI.UI_SELECT.itemListClose, setSelectProp: SangriaUI.UI_SELECT.setSelectProp}, jQueryVersionConfirm: (function(int, int=, int=): boolean), jQueryEventCheck: SangriaUI.jQueryEventCheck}}
+ * @type {{UI_SELECT: {targetSelector: string, itemListShowType: SangriaUI.UI_SELECT.itemListShowType, create: (function(string=): boolean), setSelectText: SangriaUI.UI_SELECT.setSelectText, select_no: number, itemListOpen: SangriaUI.UI_SELECT.itemListOpen, itemListClose: SangriaUI.UI_SELECT.itemListClose, setSelectProp: SangriaUI.UI_SELECT.setSelectProp}, version: string, jQueryVersionConfirm: (function(int, int=, int=): boolean), jQueryEventCheck: SangriaUI.jQueryEventCheck}}
  */
 let SangriaUI={
 	version:'1.0.0',

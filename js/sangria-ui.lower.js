@@ -5,7 +5,7 @@
  * @type {{UI_SELECT: {targetSelector: string, itemListShowType: SangriaUI.UI_SELECT.itemListShowType, create: (function(string=): boolean), setSelectText: SangriaUI.UI_SELECT.setSelectText, select_no: number, itemListOpen: SangriaUI.UI_SELECT.itemListOpen, itemListClose: SangriaUI.UI_SELECT.itemListClose, setSelectProp: SangriaUI.UI_SELECT.setSelectProp}, version: string, jQueryVersionConfirm: (function(int, int=, int=): boolean), jQueryEventCheck: SangriaUI.jQueryEventCheck}}
  */
 var SangriaUI = {
-  version: '1.0.0',
+  version: '1.0.1',
 
   /**
    * jQuery 버전 검증
@@ -115,7 +115,7 @@ var SangriaUI = {
         var attr_id = targetId != '' ? "id=\"".concat(targetId, "\"") : '';
         targetClass += 'ss_wrap close';
         targetClass = targetClass.trim();
-        targetClass = targetClass.replaceAll('  ', ' '); // 신규 박스 추가
+        targetClass = targetClass.replace(/  /gi, ' '); // 신규 박스 추가
 
         var selectHtml = "<a href=\"#\" class=\"ss_selected_value\" title=\"\"></a>";
         var selectOptionHtml = "<ul class=\"ss_option_list\">";

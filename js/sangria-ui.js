@@ -294,5 +294,12 @@ if( typeof jQuery == 'function' ){
 				SangriaUI.UI_SELECT.itemListShowType(targetName);
 			});
 		});
+
+		$(document).on('mouseup', function (e){
+			let container = $('.ss_wrap');
+			if( container.has(e.target).length === 0){
+				$(".ss_wrap").removeClass('open').addClass('close');
+			}
+		});
 	});
 };

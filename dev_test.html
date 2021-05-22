@@ -66,7 +66,7 @@
 
 		<div class="col-md-5">
 			<label for="country" class="form-label">Country</label>
-			<select class="sangria-select" id="country" required="" disabled>
+			<select class="sangria-select" id="country" required="" >
 				<option value="">Choose...</option>
 				<option>United States</option>
 			</select>
@@ -77,7 +77,18 @@
 
 		<div class="col-md-4">
 			<label for="state" class="form-label">State</label>
-			<select class="sangria-select" id="state" required="">
+			<select class="sangria-select" id="state" required="" data-ss-close-mode="click">
+				<option value="">Choose...</option>
+				<option>California</option>
+			</select>
+			<div class="invalid-feedback">
+				Please provide a valid state.
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<label for="state" class="form-label">State</label>
+			<select class="sangria-select" id="state2" required="" data-ss-close-mode="click">
 				<option value="">Choose...</option>
 				<option>California</option>
 			</select>

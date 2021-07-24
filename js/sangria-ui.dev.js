@@ -298,7 +298,8 @@ if( typeof jQuery == 'function' ){
 		$(document).on('mouseup', function (e){
 			let container = $('.ss_wrap');
 			if( container.has(e.target).length === 0){
-				$(".ss_wrap").removeClass('open').addClass('close');
+				container.removeClass('open').addClass('close');
+				container.find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
 			}
 		});
 	});

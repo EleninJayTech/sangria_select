@@ -161,6 +161,7 @@ let SangriaUI={
 
 					_this.setSelectProp(targetName, selected_value);
 					_this.setSelectText(targetName);
+					_this.itemListClose(targetName);
 
 					el_select_option.trigger('click');
 					e.preventDefault();
@@ -229,7 +230,6 @@ let SangriaUI={
 			}
 
 			el_selectedTarget.trigger('change');
-			_this.itemListClose(targetName);
 		},
 
 		/**
@@ -262,6 +262,7 @@ let SangriaUI={
 			// todo 현재 선택값 selected 및 idx 지정
 			let el_selected = $(`select[data-ss-name='${targetName}']`);
 			let selected = el_selected.val();
+			let el_select_option = el_selected.find('option');
 
 			// 전체 .selected 제거
 			let el_li_list = el_ss_wrap.find('.ss_option_list li');
@@ -284,12 +285,10 @@ let SangriaUI={
 			// 키보드로 이동
 			$("html > body").off('keydown');
 			$("html > body").on('keydown', function(event){
-				if(event.keyCode == 38){ // 위
+				if(event.keyCode === 38){ // 위
 					option_idx--;
-				} else if(event.keyCode == 40){ // 아래
+				} else if(event.keyCode === 40){ // 아래
 					option_idx++;
-				} else if(event.keyCode == 13){ // 엔터
-					
 				} else {
 					return true;
 				}
@@ -297,6 +296,12 @@ let SangriaUI={
 				option_idx = _this.optionIdxCheck(option_idx, option_length);
 				el_li_list.removeClass('selected');
 				el_li_list.eq(option_idx).addClass('selected');
+
+				let selected_value = el_li_list.eq(option_idx).attr('data-ss-value');
+				_this.setSelectProp(targetName, selected_value);
+				_this.setSelectText(targetName);
+
+				el_select_option.trigger('click');
 			});
 		},
 

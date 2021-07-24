@@ -233,13 +233,71 @@ let SangriaUI={
 		},
 
 		/**
+		 * 옵션 인덱스 최소 최대
+		 * @param idx
+		 * @param max
+		 * @returns {number}
+		 */
+		optionIdxCheck:function(idx, max){
+			if(idx < 0){
+				idx = 0;
+			} else if(idx >= max){
+				idx = max - 1;
+			}
+			return idx;
+		},
+
+		/**
 		 * 목록 열기
 		 * @param {string} targetName
 		 */
 		itemListOpen:function(targetName){
+			let _this = this;
 			let el_ss_wrap = $(`.ss_wrap[data-ss-name='${targetName}']`);
 			el_ss_wrap.removeClass('close').addClass('open');
 			el_ss_wrap.find('.su-icon.icon-su-arrow-down').removeClass('icon-su-arrow-down').addClass('icon-su-arrow-up');
+
+			let option_idx = 0;
+
+			// todo 현재 선택값 selected 및 idx 지정
+			let el_selected = $(`select[data-ss-name='${targetName}']`);
+			let selected = el_selected.val();
+
+			// 전체 .selected 제거
+			let el_li_list = el_ss_wrap.find('.ss_option_list li');
+			el_li_list.removeClass('selected');
+			let option_length = el_li_list.length;
+
+			// 선택된것 selected
+			el_li_list.each(function(idx, _element){
+				let el_this = $(_element);
+				let ss_value = el_this.attr('data-ss-value');
+				// 선택된 값이면
+				if( ss_value == selected ){
+					option_idx = idx;
+					el_this.addClass('selected');
+				} else {
+					return true;
+				}
+			});
+
+			// 키보드로 이동
+			$("html > body").off('keydown');
+			$("html > body").on('keydown', function(event){
+				if(event.keyCode == 38){ // 위
+					option_idx--;
+				} else if(event.keyCode == 40){ // 아래
+					option_idx++;
+				} else if(event.keyCode == 13){ // 엔터
+					
+				} else {
+					return true;
+				}
+
+				option_idx = _this.optionIdxCheck(option_idx, option_length);
+				el_li_list.removeClass('selected');
+				el_li_list.eq(option_idx).addClass('selected');
+			});
 		},
 
 		/**
@@ -250,6 +308,9 @@ let SangriaUI={
 			let el_ss_wrap = $(`.ss_wrap[data-ss-name='${targetName}']`);
 			el_ss_wrap.removeClass('open').addClass('close');
 			el_ss_wrap.find('.su-icon.icon-su-arrow-up').removeClass('icon-su-arrow-up').addClass('icon-su-arrow-down');
+			
+			// 키 다운 없애기
+			$("html > body").off('keydown');
 		},
 
 		/**

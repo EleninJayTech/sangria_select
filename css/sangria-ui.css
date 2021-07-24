@@ -120,6 +120,9 @@ ul.ss_option_list li {
 ul.ss_option_list li:hover {
   background: #e3e3e3;
 }
+ul.ss_option_list li.selected {
+  background: #e3e3e3;
+}
 
 .ss_wrap.list_up .ss_option_list {
   border-radius: 3px 3px 0 0;

@@ -121,6 +121,9 @@ ul.ss_option_list{
 		&:hover{
 			background: #e3e3e3;
 		}
+		&.selected{
+			background: #e3e3e3;
+		}
 	}
 }
 

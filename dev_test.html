@@ -181,15 +181,15 @@
 </form>
 
 
-<!--	<script src="js/sangria-ui.dev.js"></script>-->
-	<script src="js/sangria-ui.min.js"></script>
+	<script src="js/sangria-ui.dev.js"></script>
+	<!--<script src="js/sangria-ui.min.js"></script>-->
 <!--	<script src="js/sangria-ui.js"></script>-->
 <script>
 	setTimeout(function(){
 		var htmleee = "<option value=\"가나다\">가나다</option> <option value=\"가나다2\">가나다2</option> <option value=\"가나다23\">가나다23</option> <option value=\"가23나다\">가23나다</option> <option value=\"가나23다\">가나23다</option>";
 		$("[name='test_2']").html(htmleee);
-		SangriaUI.UI_SELECT.create('[name=\'test_2\']');
-		// SangriaUI.UI_SELECT.setOption(`select[name="test_2"]`);
+		Sangria_SELECT.create('[name=\'test_2\']');
+		// Sangria_SELECT.setOption(`select[name="test_2"]`);
 	}, 1000);
 </script>
 </body>

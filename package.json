@@ -1,0 +1,28 @@
+{
+  "name": "sangria_select",
+  "version": "1.0.0",
+  "description": "Custom UI Toolkit",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EleninJayTech/sangria_select.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EleninJayTech/sangria_select/issues"
+  },
+  "homepage": "https://github.com/EleninJayTech/sangria_select#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "babel-preset-minify": "^0.5.1"
+  }
+}
